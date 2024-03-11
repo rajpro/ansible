@@ -1,0 +1,3 @@
+[webserver]
+35.154.238.147 ansible_ssh_private_key_file=/home/rajesh/Documents/keys/niser.pem
+3.7.253.141 ansible_ssh_private_key_file=/home/rajesh/Documents/keys/niser.pem

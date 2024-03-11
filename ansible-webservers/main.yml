@@ -1,0 +1,17 @@
+---
+- name: Install Nginx servers
+  hosts: webserver
+  remote_user: ubuntu
+  become: true
+
+  tasks:
+    - name: Update & Upgrade
+      shell: apt update && apt -y upgrade
+    - name: Install Nginx
+      apt:
+        name: nginx
+        state: present
+    - name: Start Nginx
+      service:
+        name: nginx
+        state: started
