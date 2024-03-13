@@ -1,0 +1,42 @@
+---
+- name: Jenkins Master
+  hosts: master
+  remote_user: ubuntu
+  become: true
+
+  tasks:
+    - name: Update Server and install Java JDK
+      shell: |
+        apt update && apt -y upgrade
+        apt install -y fontconfig openjdk-17-jre
+
+    - name: Add Jenkin Repository
+      shell: |
+        wget -O /usr/share/keyrings/jenkins-keyring.asc https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
+        echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian-stable binary/ | sudo tee /etc/apt/sources.list.d/jenkins.list > /dev/null
+
+    - name: Update Server
+      shell: apt update
+
+    - name: Install Jenkins
+      apt:
+        name: jenkins
+        state: present
+    
+    - name: Change Jenkins Port
+      shell: |
+        sed -i -e 's/Environment="JENKINS_PORT=[0-9]\+"/Environment="JENKINS_PORT=80"/' /usr/lib/systemd/system/jenkins.service
+        sed -i -e 's/^\s*#\s*AmbientCapabilities=CAP_NET_BIND_SERVICE/AmbientCapabilities=CAP_NET_BIND_SERVICE/' /usr/lib/systemd/system/jenkins.service
+    
+    - name: Restart jenkins
+      shell: |
+        systemctl daemon-reload
+        systemctl restart jenkins
+
+    - name: Get Jenkins Admin Password
+      shell: cat /var/lib/jenkins/secrets/initialAdminPassword
+      register: admin
+
+    - name: Print Jenkin Admin Password
+      debug:
+        var: admin

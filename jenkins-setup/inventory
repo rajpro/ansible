@@ -1,0 +1,4 @@
+[master]
+65.0.95.164 ansible_ssh_private_key_file=/home/rajesh/Documents/keys/niser.pem
+[slave]
+52.66.212.85 ansible_ssh_private_key_file=/home/rajesh/Documents/keys/niser.pem
